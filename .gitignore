@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.egg
+
+# Environment — NEVER commit these
+.env
+*.env
+.env.local
+.env.*.local
+
+# Sensitive key files — NEVER commit these
+*_secret.key
+*_secret.bin
+deployment_integrity.json
+
+# Data — never commit patient data
+uploads/
+*.bin
+*_commitments.log
+*_local_audit.jsonl
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Node
+node_modules/
+.next/
+out/
+
+# IDE
+.cursor/
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker / logs
+*.log
+logs/

@@ -1,0 +1,18 @@
+# SPDX-License-Identifier: Apache-2.0
+# Production overrides: env, volumes, scaling
+version: "3.8"
+services:
+  backend:
+    environment:
+      - SECURECOLLAB_PRODUCTION=1
+    volumes:
+      - backend_data:/app/data
+      - backend_uploads:/app/uploads
+
+  frontend:
+    environment:
+      - NEXT_PUBLIC_API_URL=https://api.example.com
+
+volumes:
+  backend_data:
+  backend_uploads:

@@ -1,0 +1,6 @@
+{
+  "slope": 2.4824,
+  "intercept": 66.8469,
+  "predictor": "age",
+  "target": "cholesterol"
+}

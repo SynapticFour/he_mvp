@@ -1,0 +1,28 @@
+# SPDX-License-Identifier: Apache-2.0
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "securecollab-sdk"
+version = "0.1.0"
+description = "SecureCollab Client SDK for homomorphic encryption and multi-party studies"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "tenseal>=0.3.15",
+    "requests>=2.31.0",
+    "click>=8.1.0",
+    "cryptography>=42.0.0",
+    "numpy>=1.26.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "black", "ruff"]
+
+[project.scripts]
+securecollab = "securecollab.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["securecollab*"]

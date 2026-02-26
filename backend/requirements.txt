@@ -1,0 +1,13 @@
+# SecureCollab backend – pinned versions for dependency security (OWASP A06)
+numpy==1.26.4
+tenseal==0.3.15
+fastapi==0.115.6
+uvicorn[standard]==0.32.1
+sqlmodel==0.0.22
+python-multipart==0.0.17
+slowapi==0.1.9
+pydantic>=2.0.0,<3
+pydantic-settings>=2.0.0
+
+# Optional: for SDK Fernet secret key protection
+cryptography>=44.0.0

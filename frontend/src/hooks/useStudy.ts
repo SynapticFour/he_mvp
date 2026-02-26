@@ -1,0 +1,19 @@
+// SPDX-License-Identifier: Apache-2.0
+import { useState, useCallback } from "react";
+
+export function useStudy(studyId: number | null) {
+  const [study, setStudy] = useState<unknown>(null);
+  const [loading, setLoading] = useState(false);
+  const fetchStudy = useCallback(async () => {
+    if (!studyId) return;
+    setLoading(true);
+    try {
+      const apiBase = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+      const res = await fetch(`${apiBase}/studies/${studyId}`);
+      if (res.ok) setStudy(await res.json());
+    } finally {
+      setLoading(false);
+    }
+  }, [studyId]);
+  return { study, loading, fetchStudy };
+}
