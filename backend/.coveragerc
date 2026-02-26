@@ -1,0 +1,17 @@
+# SPDX-License-Identifier: Apache-2.0
+[run]
+source = app
+omit =
+    */tests/*
+    */__pycache__/*
+    conftest.py
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
+    if TYPE_CHECKING:
+    if __name__ == .__main__.:
+
+fail_under = 70

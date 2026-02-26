@@ -163,4 +163,4 @@ Apache 2.0 — see [LICENSE](LICENSE).
 
 ## Contributing
 
-Security issues: please report to [your-security@email] (responsible disclosure), not as a public GitHub issue. For other contributions: open an issue or pull request as usual.
+Security issues: please report to info@synapticfour.com (responsible disclosure), not as a public GitHub issue. For other contributions: open an issue or pull request as usual.

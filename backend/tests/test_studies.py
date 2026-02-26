@@ -15,6 +15,23 @@ def test_get_studies_empty():
     assert r.json() == []
 
 
+def test_get_studies_no_param_returns_empty():
+    """List studies without participant_email returns empty list (early exit)."""
+    r = client.get("/studies")
+    assert r.status_code == 200
+    assert r.json() == []
+
+
+def test_get_study_404():
+    r = client.get("/studies/99999")
+    assert r.status_code == 404
+
+
+def test_study_protocol_404():
+    r = client.get("/studies/99999/protocol")
+    assert r.status_code == 404
+
+
 def test_system_health():
     """Health endpoint returns ok."""
     r = client.get("/system/health")

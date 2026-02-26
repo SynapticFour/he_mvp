@@ -2,7 +2,6 @@
 """Job request, approve, reject, result, list."""
 import json
 import pickle
-from datetime import datetime
 from pathlib import Path
 
 from fastapi import APIRouter, HTTPException, Request
@@ -90,7 +89,7 @@ def jobs_approve(request: Request, job_id: int):
             sel_cols = []
         try:
             result_obj = run_computation(bundle, algorithm, sel_cols)
-        except Exception as e:
+        except Exception:
             import logging
             logging.getLogger("securecollab").exception("HE computation failed for job %s", job_id)
             raise HTTPException(status_code=500, detail="Computation failed. Check algorithm and columns.")

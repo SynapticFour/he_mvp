@@ -644,7 +644,7 @@ def studies_job_approve(study_id: int, job_id: int, body: StudyApprove):
             sel_cols = []
         try:
             result_obj = ALGORITHMS[algorithm](bundle, sel_cols)
-        except Exception as e:
+        except Exception:
             import logging
             logging.getLogger("securecollab").exception("HE computation failed for study job %s", job_id)
             raise HTTPException(status_code=500, detail="Computation failed. Check algorithm and columns.")

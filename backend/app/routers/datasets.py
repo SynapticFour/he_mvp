@@ -4,7 +4,7 @@ import json
 import uuid
 from pathlib import Path
 
-from fastapi import APIRouter, File, Form, HTTPException, UploadFile
+from fastapi import APIRouter, File, Form, HTTPException, Request, UploadFile
 
 from app.config import (
     ALLOWED_UPLOAD_EXTENSIONS,
@@ -24,6 +24,7 @@ router = APIRouter(prefix="/datasets", tags=["datasets"])
 @router.post("/upload")
 @rate_limit("10/hour")
 async def datasets_upload(
+    request: Request,
     file: UploadFile = File(..., description="encrypted.bin"),
     name: str = Form(...),
     description: str = Form(...),

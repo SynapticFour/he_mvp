@@ -10,7 +10,7 @@ jobs:
         with:
           python-version: "3.11"
       - run: pip install -r backend/requirements.txt -r backend/requirements-dev.txt
-      - run: cd backend && pytest tests/ -v --tb=short
+      - run: cd backend && pytest tests/ -v --tb=short --cov=app --cov-report=term-missing --cov-fail-under=70
 
   test-frontend:
     runs-on: ubuntu-latest

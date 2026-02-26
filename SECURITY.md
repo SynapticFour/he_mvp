@@ -23,7 +23,7 @@ SecureCollab relies on the following cryptographic building blocks:
 
 **Responsible disclosure:** Please do **not** report security vulnerabilities as public GitHub issues. Send details to:
 
-**[Your security contact email]**
+**info@synapticfour.com**
 
 - We aim to acknowledge within **48 hours** and to provide a fix or mitigation plan within **30 days** where feasible.
 - We will coordinate with you before any public disclosure.
