@@ -450,7 +450,7 @@ def studies_synthetic_upload(
             schema_valid = False
             issues.append(str(e))
         study_dir = STUDIES_UPLOADS_DIR / str(study_id)
-        study_dir.mkdir(exist_ok=True)
+        study_dir.mkdir(parents=True, exist_ok=True)
         path = study_dir / f"synthetic_{uuid.uuid4().hex}.csv"
         path.write_bytes(content)
         syn = SyntheticSubmission(
@@ -538,7 +538,7 @@ def studies_upload_dataset(
         fp = study.public_key_fingerprint or ""
         commitment_hash = sha3_256_hex(file_bytes, fp, ts_str, institution_email)
         study_dir = STUDIES_UPLOADS_DIR / str(study_id)
-        study_dir.mkdir(exist_ok=True)
+        study_dir.mkdir(parents=True, exist_ok=True)
         path = study_dir / f"{uuid.uuid4().hex}.bin"
         path.write_bytes(file_bytes)
         try:
