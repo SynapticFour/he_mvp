@@ -7,7 +7,7 @@ from fastapi import APIRouter, Query, Request
 from app.core.security import rate_limit
 from app.services.integrity_service import get_deployment_integrity, verify_codebase_hash
 
-router = APIRouter(prefix="/system", tags=["system"])
+router = APIRouter(tags=["system"])
 
 
 @router.get("/health")

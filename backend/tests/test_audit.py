@@ -48,8 +48,8 @@ def test_tamper_detection():
         entry_hash = sha3_256_hex(payload)
         chain.append({"payload": payload, "entry_hash": entry_hash})
         prev = entry_hash
-    # Tamper: change payload of entry 2
-    tampered_payload = chain[2]["payload"].replace("i': 2", "i': 99")
+    # Tamper: change payload of entry 2 (payload contains "i": 2 from json.dumps({'i': 2}))
+    tampered_payload = chain[2]["payload"].replace('"i": 2', '"i": 99')
     tampered_hash = sha3_256_hex(tampered_payload)
     assert tampered_hash != chain[2]["entry_hash"]
     # Next link would use wrong previous_hash

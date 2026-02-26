@@ -14,7 +14,7 @@ from app.schemas import JobRequest
 from app.services.he_service import run_computation
 from sqlmodel import select
 
-router = APIRouter(prefix="/jobs", tags=["jobs"])
+router = APIRouter(tags=["jobs"])
 
 
 @router.get("/my/{requester_email}")

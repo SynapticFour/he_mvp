@@ -2,7 +2,7 @@
 """Participant-related endpoints (studies listing by participant)."""
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/participants", tags=["participants"])
+router = APIRouter(tags=["participants"])
 
 
 @router.get("/studies/{participant_email}")

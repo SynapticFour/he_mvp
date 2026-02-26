@@ -25,7 +25,7 @@ def _make_simple_bundle(values: list[float], col_name: str = "col1"):
     n = len(values)
     bundle = {
         "public_context": ctx.serialize(save_secret_key=False),
-        "secret_context": ctx.serialize(save_public_key=True),
+        "secret_context": ctx.serialize(save_secret_key=True),
         "vectors": {col_name: enc.serialize()},
         "columns": f'["{col_name}"]',
         "n": n,
@@ -46,7 +46,7 @@ def _make_two_column_bundle(col1: list[float], col2: list[float], name1: str = "
     enc2 = ts.ckks_vector(ctx, col2)
     bundle = {
         "public_context": ctx.serialize(save_secret_key=False),
-        "secret_context": ctx.serialize(save_public_key=True),
+        "secret_context": ctx.serialize(save_secret_key=True),
         "vectors": {name1: enc1.serialize(), name2: enc2.serialize()},
         "columns": f'["{name1}", "{name2}"]',
         "n": n,

@@ -18,7 +18,7 @@ from app.database import Session, engine
 from app.models import Dataset, Job
 from sqlmodel import select
 
-router = APIRouter(prefix="/datasets", tags=["datasets"])
+router = APIRouter(tags=["datasets"])
 
 
 @router.post("/upload")
