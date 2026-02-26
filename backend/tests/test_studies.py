@@ -185,8 +185,8 @@ def test_request_and_approve_computation():
 
 
 def test_full_multiparty_workflow():
-    """Two institutions, one computation (study flow: create, protocol, join, activate, upload, request, approve, submit share)."""
-    # Create study
+    """Two institutions, one computation (study flow: create, protocol, join, schema, synthetic, activate, request, approve, submit share)."""
+    # Create study (creator submits a key share so all_keys can be met)
     r = client.post(
         "/studies/create",
         json={
@@ -198,7 +198,7 @@ def test_full_multiparty_workflow():
             "threshold_n": 2,
             "allowed_algorithms": ["mean"],
             "column_definitions": [{"name": "x", "data_type": "float", "required": True}],
-            "public_key_share": "",
+            "public_key_share": "dummy_key_creator",
         },
     )
     assert r.status_code == 200
@@ -226,13 +226,79 @@ def test_full_multiparty_workflow():
         },
     )
     assert r_join.status_code == 200
-    # Activate (may need schema submit + dry run; try activate)
+    # Schema submit for both participants (required for activation)
+    r_schema1 = client.post(
+        f"/studies/{study_id}/schema/submit",
+        json={
+            "institution_email": "inst1@test.com",
+            "local_schema": {"columns": [{"name": "x", "type": "float"}]},
+            "proposed_mapping": {"x": "x"},
+        },
+    )
+    assert r_schema1.status_code == 200
+    assert r_schema1.json().get("compatible") is True
+    r_schema2 = client.post(
+        f"/studies/{study_id}/schema/submit",
+        json={
+            "institution_email": "inst2@test.com",
+            "local_schema": {"columns": [{"name": "x", "type": "float"}]},
+            "proposed_mapping": {"x": "x"},
+        },
+    )
+    assert r_schema2.status_code == 200
+    assert r_schema2.json().get("compatible") is True
+    # Synthetic (dry-run) upload for both participants (required for activation)
+    import io
+    minimal_csv = io.BytesIO(b"x\n1.0")
+    r_syn1 = client.post(
+        f"/studies/{study_id}/synthetic/upload",
+        files={"file": ("synthetic.csv", minimal_csv, "text/csv")},
+        data={"institution_email": "inst1@test.com"},
+    )
+    assert r_syn1.status_code == 200
+    minimal_csv2 = io.BytesIO(b"x\n2.0")
+    r_syn2 = client.post(
+        f"/studies/{study_id}/synthetic/upload",
+        files={"file": ("synthetic.csv", minimal_csv2, "text/csv")},
+        data={"institution_email": "inst2@test.com"},
+    )
+    assert r_syn2.status_code == 200
+    # Activate: all preconditions (protocol, schemas, dry run, keys) are now met
     r_act = client.post(f"/studies/{study_id}/activate", params={"actor_email": "inst1@test.com"})
-    # Can be 200 or fail on preconditions
-    assert r_act.status_code in (200, 422)
-    if r_act.status_code != 200:
-        pytest.skip("Activate preconditions not met (schema/dry run); rest of workflow skipped")
-    # Request computation
+    assert r_act.status_code == 200
+    assert r_act.json().get("activated") is True or r_act.json().get("status") == "active", (
+        f"Activation failed: {r_act.json()}"
+    )
+    # Upload a study dataset (required for job approve to run computation)
+    pytest.importorskip("tenseal")
+    import pickle
+    try:
+        import tenseal as ts
+        ctx = ts.context(ts.SCHEME_TYPE.CKKS, 8192, coeff_mod_bit_sizes=[60, 40, 40, 60])
+        ctx.global_scale = 2**40
+        ctx.generate_galois_keys()
+        enc = ts.ckks_vector(ctx, [1.0, 2.0, 3.0])
+        bundle = {
+            "public_context": ctx.serialize(save_secret_key=False),
+            "secret_context": ctx.serialize(save_secret_key=True),
+            "vectors": {"x": enc.serialize()},
+            "columns": '["x"]',
+            "n": 3,
+        }
+    except Exception:
+        pytest.skip("TenSEAL bundle creation failed")
+    file_bytes = pickle.dumps(bundle)
+    r_up = client.post(
+        f"/studies/{study_id}/upload_dataset",
+        files={"file": ("encrypted.bin", io.BytesIO(file_bytes), "application/octet-stream")},
+        data={
+            "institution_email": "inst1@test.com",
+            "dataset_name": "Test Dataset",
+            "columns": '["x"]',
+        },
+    )
+    assert r_up.status_code == 200
+    # Request computation (study is now active)
     r_req = client.post(
         f"/studies/{study_id}/request_computation",
         json={
